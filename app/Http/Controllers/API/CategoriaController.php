@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Categoria;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,6 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request);
         $categoria = $this->save(new Categoria, $request);
         return response()->json($categoria, 201);
     }
@@ -50,7 +50,6 @@ class CategoriaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request);
         $categoria = $this->save(Categoria::findOrFail($id), $request);
         return response()->json($categoria, 200);
     }
@@ -67,18 +66,15 @@ class CategoriaController extends Controller
         return response()->json(null, 204);
     }
 
-    protected function save($categoria, $request)
-    {
-        $categoria->fill([
-            'nombre' => $request->nombre
-        ])->save();
-        return $categoria;
-    }
-
-    protected function validate($request)
+    private function save($categoria, $request)
     {
         $request->validate([
             'nombre' => 'required'
         ]);
+
+        $categoria->fill([
+            'nombre' => $request->nombre
+        ])->save();
+        return $categoria;
     }
 }
