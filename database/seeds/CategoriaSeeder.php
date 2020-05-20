@@ -5,7 +5,8 @@ use Illuminate\Database\Seeder;
 
 class CategoriaSeeder extends Seeder
 {
-    const CATEGORIAS = array('Pizzas',
+    const CATEGORIAS = array(
+        'Pizzas',
         'Bebidas',
         'Bebidas alcoholicas',
         'Postres',
