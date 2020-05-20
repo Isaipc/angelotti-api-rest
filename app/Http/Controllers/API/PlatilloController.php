@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Platillo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class PlatilloController extends Controller
      */
     public function index()
     {
-        //
+        return Platillo::orderBy('created_at', 'DESC')->get();
     }
 
     /**
@@ -25,7 +26,8 @@ class PlatilloController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $platillo = $this->save(new Platillo, $request);
+        return response()->json($platillo, 201);
     }
 
     /**
@@ -36,7 +38,7 @@ class PlatilloController extends Controller
      */
     public function show($id)
     {
-        //
+        return Platillo::findOrFail($id);
     }
 
     /**
@@ -48,7 +50,8 @@ class PlatilloController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $platillo = $this->save(Platillo::findOrFail($id), $request);
+        return response()->json($platillo, 200);
     }
 
     /**
@@ -59,6 +62,25 @@ class PlatilloController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Platillo::destroy($id);
+        return response()->json(null, 204);
+    }
+
+    private function save($platillo, $request)
+    {
+        $request->validate([
+            'nombre' => 'required',
+            'precio' => 'required',
+            'imagen' => 'required',
+            'platillo_id' => 'required'
+        ]);
+
+        $platillo->fill([
+            'nombre' => $request->nombre,
+            'precio' => $request->precio,
+            'imagen' => $request->imagen,
+            'platillo_id' => $request->platillo_id
+        ])->save();
+        return $platillo;
     }
 }

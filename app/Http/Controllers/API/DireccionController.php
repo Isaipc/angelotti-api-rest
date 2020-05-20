@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Direccion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class DireccionController extends Controller
      */
     public function index()
     {
-        //
+        return Direccion::orderBy('created_at', 'DESC')->get();
     }
 
     /**
@@ -25,7 +26,8 @@ class DireccionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $direccion = $this->save(new Direccion, $request);
+        return response()->json($direccion, 201);
     }
 
     /**
@@ -36,7 +38,7 @@ class DireccionController extends Controller
      */
     public function show($id)
     {
-        //
+        return Direccion::findOrFail($id);
     }
 
     /**
@@ -48,7 +50,8 @@ class DireccionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $direccion = $this->save(Direccion::findOrFail($id), $request);
+        return response()->json($direccion, 200);
     }
 
     /**
@@ -59,6 +62,27 @@ class DireccionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Direccion::destroy($id);
+        return response()->json(null, 204);
+    }
+
+    private function save($direccion, $request)
+    {
+        $request->validate([
+            'calle' => 'required',
+            'colonia' => 'required',
+            'cp' => 'required'
+        ]);
+
+        $direccion->fill([
+            'calle' => $request->calle,
+            'colonia' => $request->colonia,
+            'cp' => $request->cp,
+            'num_ext' => $request->num_ext,
+            'num_int' => $request->num_int,
+            'referencia' => $request->referencia
+        ])->save();
+
+        return $direccion;
     }
 }

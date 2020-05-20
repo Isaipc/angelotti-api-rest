@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Pedido;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class PedidoController extends Controller
      */
     public function index()
     {
-        //
+        return Pedido::orderBy('created_at', 'DESC')->get();
     }
 
     /**
@@ -25,7 +26,8 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $pedido = $this->save(new Pedido, $request);
+        return response()->json($pedido, 201);
     }
 
     /**
@@ -36,7 +38,7 @@ class PedidoController extends Controller
      */
     public function show($id)
     {
-        //
+        return Pedido::findOrFail($id);
     }
 
     /**
@@ -48,7 +50,8 @@ class PedidoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $pedido = $this->save(Pedido::findOrFail($id), $request);
+        return response()->json($pedido, 200);
     }
 
     /**
@@ -59,6 +62,24 @@ class PedidoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Pedido::destroy($id);
+        return response()->json(null, 204);
+    }
+
+    private function save($pedido, $request)
+    {
+        $request->validate([
+            'platillo_id' => 'required',
+            'direccion_id' => 'required',
+            'cuenta_id' => 'required',
+            'total'  => 'required'
+        ]);
+
+        $pedido->fill([
+            'platillo_id' => $request->platillo_id,
+            'direccion_id' => $request->direccion_id,
+            'cuenta_id' => $request->cuenta_id,
+            'total'  => $request->total
+        ])->save();
     }
 }
