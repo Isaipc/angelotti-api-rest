@@ -15,9 +15,9 @@ class CreatePedidosTable extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
-            $table->string('platillo_id');
-            $table->string('direccion_id');
-            $table->string('cuenta_id');
+            $table->unsignedBigInteger('platillo_id');
+            $table->unsignedBigInteger('direccion_id');
+            $table->unsignedBigInteger('cuenta_id');
             $table->double('total');
             $table->foreign('platillo_id')->references('id')->on('platillos');
             $table->foreign('direccion_id')->references('id')->on('direccions');
