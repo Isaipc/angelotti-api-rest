@@ -10,7 +10,6 @@ class CategoriaSeeder extends Seeder
         'Bebidas',
         'Bebidas alcoholicas',
         'Postres',
-        'Postres frios',
         'Acompañamiento'
     );
 
